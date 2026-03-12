@@ -1,15 +1,15 @@
 # CLAUDE.md
 
 ## プロジェクト概要
-このリポジトリはMLコンペ「{コンペティション名}」のデータ分析およびモデル作成を行う
+このリポジトリはKaggleコンペ「Predict Customer Churn」（Playground Series - Season 6 Episode 3）のデータ分析およびモデル作成を行う
 
 ### 目的
-{コンペティションの目的を記載}
+顧客の離脱（Churn）の確率を予測する二値分類タスク
 
 ### 評価指標
-- **{評価指標名}（例: F1 Macro, RMSE, AUC）**: コンペティションの公式評価指標
-- {評価指標の詳細説明}
-- モデル開発・評価時は必ずこの指標を主要指標として使用すること
+- **AUC-ROC（Area Under the ROC Curve）**: コンペティションの公式評価指標
+- 予測確率と実際のターゲットの間のROC曲線下面積で評価
+- モデル開発・評価時は必ずAUC-ROCを主要指標として使用すること
 
 ## 環境
 
@@ -24,13 +24,16 @@
 ```
 project_root/
 ├── data/
-│   ├── raw/                # 元データ（コンペからダウンロードしたファイル）
+│   ├── raw/                # 元データ（Kaggleからダウンロード）
+│   │   ├── train.csv
+│   │   ├── test.csv
+│   │   └── sample_submission.csv
 │   └── processed/          # 前処理済みデータ
 ├── experiments/            # 実験用フォルダ
 │   └── YYYYMMDD_NN_実験名/
 │       ├── main.py         # 実験用スクリプト（自己完結）
 │       ├── predictions/    # 予測結果
-│       │   ├── oof.csv            # OOF予測（ID + 確率 + 予測クラス）
+│       │   ├── oof.csv            # OOF予測（ID + 確率）
 │       │   ├── test_proba.csv     # テスト予測確率
 │       │   ├── test.csv           # テスト予測（提出用）
 │       │   └── fold_indices.pkl   # CV fold情報（オプション）
@@ -50,22 +53,29 @@ project_root/
 
 ## データ形式
 
-{ここにコンペティション固有のデータ形式を記載する}
+- データソース: IBM顧客離脱予測データセットからDeep Learningモデルで生成された合成データ
+- 全体サイズ: 116.57 MB、43カラム
+- カラム型: String 22列、Boolean 9列、Integer 5列、Other 7列
+- 元データセット: https://www.kaggle.com/datasets/thedrzee/customer-churn-in-telecom-sample-dataset-by-ibm
 
 ### 訓練データ
-```
-{ファイル名、カラム、行数、形式の説明}
-```
+- **ファイル**: `data/raw/train.csv`
+- **ターゲット**: `Churn`（二値）
+- **ID**: `id`
 
 ### テストデータ
-```
-{ファイル名、カラム、行数、形式の説明}
-```
+- **ファイル**: `data/raw/test.csv`
+- **カラム**: 訓練データと同じ（`Churn`列を除く）
 
 ### 提出ファイル
+```csv
+id,Churn
+594194,0.1
+594195,0.3
+594196,0.2
 ```
-{提出ファイルのフォーマット}
-```
+- `id`: テストデータのID
+- `Churn`: 離脱確率（0〜1の確率値）
 
 ## 実験管理ルール
 
@@ -88,7 +98,7 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 
 ### フォルダ命名規則
 - **形式**: `YYYYMMDD_NN_実験名`（NNは連番: 01, 02, 03...）
-- **例**: `20251120_01_data_validation`, `20251120_02_baseline_lgbm`
+- **例**: `20260313_01_data_validation`, `20260313_02_baseline_lgbm`
 - **場所**: `experiments/` ディレクトリ配下
 - **同日複数実験**: 連番により実行順序を明確化
 
@@ -101,9 +111,9 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
    - コマンドライン引数でパラメータ調整可能にする
 
 2. **predictions/** (必須)
-   - `oof.csv`: OOF予測結果（ID, 各クラス確率, 予測, 正解）
-   - `test_proba.csv`: テスト予測確率（ID, 各クラス確率）
-   - `test.csv`: テスト予測（提出用、コンペの提出フォーマットに合わせる）
+   - `oof.csv`: OOF予測結果（ID, 確率, 正解）
+   - `test_proba.csv`: テスト予測確率（ID, 確率）
+   - `test.csv`: テスト予測（提出用: `id,Churn`）
    - `fold_indices.pkl`: CV fold情報（オプション、再現性確保のため）
 
 3. **model/** (必要に応じて)
@@ -115,18 +125,16 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 
 ### 実験履歴の記録
 - 各実験完了後、本ファイル（CLAUDE.md）の「実験履歴」セクションに要約を追加
-- 見出しは実験フォルダ名と一致させる（例: `### 20251120_01_data_validation`）
+- 見出しは実験フォルダ名と一致させる（例: `### 20260313_01_data_validation`）
 - 目的、アプローチ、結果、次のステップを記録
 
 ### コミットルール
 - 実験フォルダ作成時にコミット
 - 実験完了・中断時にコミット
-- コミットメッセージ例: `Add experiment: 20251120_01_data_validation`
+- コミットメッセージ例: `Add experiment: 20260313_01_data_validation`
 - pushはユーザーから明示的に指示されたときのみ実行すること
 
 ## 実験履歴
-
-{ここに各実験の要約を追加していく}
 
 <!--
 ### YYYYMMDD_NN_実験名

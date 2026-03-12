@@ -1,7 +1,7 @@
 [project]
-name = "ml-competition-template"
+name = "kaggle-predict-customer-churn"
 version = "0.1.0"
-description = "Machine learning competition template"
+description = "Kaggle Playground Series S6E3: Predict Customer Churn"
 requires-python = ">=3.11"
 dependencies = [
     "numpy<2.0",

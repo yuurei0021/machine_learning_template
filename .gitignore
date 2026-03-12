@@ -40,6 +40,9 @@ env/
 # Claude Code
 .claude/
 
+# Playwright CLI
+.playwright-cli/
+
 # Experiment outputs
 experiments/*/model/
 experiments/*/predictions/
