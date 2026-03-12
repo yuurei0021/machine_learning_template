@@ -183,5 +183,16 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - OOF AUC-ROC: **0.9164**（各Fold: 0.9160, 0.9170, 0.9165, 0.9176, 0.9148）
 - OOF LogLoss: 0.2977, Accuracy: 0.8615
 - 重要な特徴量（Gain順）: Contract, OnlineSecurity, TechSupport, InternetService, tenure
-- LB AUC-ROC: TBD
+- LB AUC-ROC: **0.91391**
 **次のステップ**: LightGBMベースライン、max_depth=1実験、アンサンブル
+
+---
+
+### 20260313_04_xgboost_depth1
+**目的**: max_depth=1でのXGBoost実験（Discussion知見: 元データの特徴量が独立的でdepth=1が最適）
+**アプローチ**: 03と同一特徴量、XGBoost (hist, max_depth=1, lr=0.05)、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9135**（max_depth=6の0.9164から-0.003）
+- 全foldで2000ラウンド上限到達（early stopping未発動）
+- 合成データのfake signalはdepth>1で捉えられるため、depth=1では若干劣る結果
+**次のステップ**: LightGBMベースライン、アンサンブル
