@@ -47,7 +47,11 @@ env/
 experiments/*/model/
 experiments/*/predictions/
 
-# Processed data (exclude large combined files)
+# Raw data (downloaded from competition)
+data/raw/*.csv
+data/raw/*.zip
+
+# Processed data
 data/processed/*.csv
 data/processed/*.csv.gz
 data/processed/*.parquet

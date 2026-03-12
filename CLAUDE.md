@@ -54,18 +54,19 @@ project_root/
 ## データ形式
 
 - データソース: IBM顧客離脱予測データセットからDeep Learningモデルで生成された合成データ
-- 全体サイズ: 116.57 MB、43カラム
-- カラム型: String 22列、Boolean 9列、Integer 5列、Other 7列
 - 元データセット: https://www.kaggle.com/datasets/thedrzee/customer-churn-in-telecom-sample-dataset-by-ibm
 
 ### 訓練データ
 - **ファイル**: `data/raw/train.csv`
-- **ターゲット**: `Churn`（二値）
-- **ID**: `id`
+- **行数**: 594,194件（21カラム）
+- **ターゲット**: `Churn`（二値: Yes/No、Yes=22.5%, No=77.5%）
+- **ID**: `id`（int64）
+- **数値カラム**: `SeniorCitizen`(int), `tenure`(int), `MonthlyCharges`(float), `TotalCharges`(float)
+- **カテゴリカラム**: `gender`, `Partner`, `Dependents`, `PhoneService`, `MultipleLines`, `InternetService`, `OnlineSecurity`, `OnlineBackup`, `DeviceProtection`, `TechSupport`, `StreamingTV`, `StreamingMovies`, `Contract`, `PaperlessBilling`, `PaymentMethod`
 
 ### テストデータ
 - **ファイル**: `data/raw/test.csv`
-- **カラム**: 訓練データと同じ（`Churn`列を除く）
+- **行数**: 254,655件（20カラム、`Churn`列を除く）
 
 ### 提出ファイル
 ```csv
