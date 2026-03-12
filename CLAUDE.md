@@ -173,3 +173,15 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - 重要な特徴量（係数の絶対値順）: tenure, TotalCharges, Contract_Two year, InternetService_Fiber optic, PaymentMethod_Electronic check
 - Confusion Matrix: FN=46,088（Churn=Yesを見逃し）、FP=40,364
 **次のステップ**: LightGBMベースラインとの比較、アンサンブル候補としてOOF予測を保存済み
+
+---
+
+### 20260313_03_xgboost_baseline
+**目的**: XGBoostによるベースライン構築（通常パラメータ、max_depth=6）
+**アプローチ**: Label Encoding + Charge_Difference（20特徴量）、XGBoost (hist, max_depth=6, lr=0.05)、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9164**（各Fold: 0.9160, 0.9170, 0.9165, 0.9176, 0.9148）
+- OOF LogLoss: 0.2977, Accuracy: 0.8615
+- 重要な特徴量（Gain順）: Contract, OnlineSecurity, TechSupport, InternetService, tenure
+- LB AUC-ROC: TBD
+**次のステップ**: LightGBMベースライン、max_depth=1実験、アンサンブル
