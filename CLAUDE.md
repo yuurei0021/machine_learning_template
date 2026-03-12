@@ -161,3 +161,15 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - train/test間の分布シフトなし → CVスコアを信頼できる
 - セキュリティ/サポート系サービス未加入者のChurn率が顕著に高い（40%超）
 **次のステップ**: ベースラインモデル構築（LightGBM）
+
+---
+
+### 20260313_02_logistic_regression
+**目的**: ロジスティック回帰によるベースライン構築。特徴量が独立的であるため強いモデルが期待される（Discussion知見）
+**アプローチ**: One-Hot Encoding（31特徴量） + StandardScaler + LogisticRegression、Charge_Difference特徴量追加、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9079**（各Fold: 0.9075, 0.9089, 0.9081, 0.9091, 0.9061）
+- OOF LogLoss: 0.3124, Accuracy: 0.8545
+- 重要な特徴量（係数の絶対値順）: tenure, TotalCharges, Contract_Two year, InternetService_Fiber optic, PaymentMethod_Electronic check
+- Confusion Matrix: FN=46,088（Churn=Yesを見逃し）、FP=40,364
+**次のステップ**: LightGBMベースラインとの比較、アンサンブル候補としてOOF予測を保存済み
