@@ -78,6 +78,19 @@ id,Churn
 - `id`: テストデータのID
 - `Churn`: 離脱確率（0〜1の確率値）
 
+## コンペ知見（Discussion要点）
+
+詳細は `docs/discussions/` を参照。以下は実験設計に影響する重要な知見：
+
+- **特徴量間の相互作用がほぼない**: 元データで `max_depth=1` が最適。ロジスティック回帰が強い。合成データでは `max_depth=2〜4` が有効（Chris Deotte, 1st place）
+- **合成データに2種類のシグナル**: (1) Real signal（元データ由来）と (2) Fake signal（合成アーティファクト）。両方を捉える必要がある
+- **TotalCharges のアーティファクト**: 元データでは `TotalCharges ≈ MonthlyCharges × tenure` が厳密に成立するが、合成データでは崩れている。`Charge_Difference = TotalCharges - MonthlyCharges * tenure` が有効な特徴量
+- **train vs test に分布シフトなし** (AV AUC=0.51): CVスコアを信頼できる
+- **train vs 元データにドリフトあり** (AV AUC=0.66): 元データを単純に結合するのは危険
+- **有効なモデル**: XGBoost, LightGBM, CatBoost, YDF, Logistic Regression, MLP, GNN, Bartz。多様性のあるアンサンブルが鍵
+- **スタッキング**: OOF予測を別モデルの特徴量に追加するテクニックが有効
+- **スコア目安**: 合成データのみで CV 0.9148〜0.9150 が天井。元データ活用やアンサンブルで 0.916+ が可能
+
 ## 実験管理ルール
 
 ### 基本原則
