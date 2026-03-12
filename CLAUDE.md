@@ -150,10 +150,14 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 
 ## 実験履歴
 
-<!--
-### YYYYMMDD_NN_実験名
-**目的**:
-**アプローチ**:
+### 20260313_01_eda
+**目的**: データの全体像を把握し、各特徴量の分布・Churnとの関係・合成アーティファクトを分析
+**アプローチ**: 基本統計量、数値/カテゴリ特徴量の分布可視化、Churn率分析、Charge_Differenceアーティファクト分析、相関行列、train vs test分布比較、クロス分析（9枚の図を生成）
 **結果**:
-**次のステップ**:
--->
+- Churn率: 22.52%（No=77.5%, Yes=22.5%）、欠損値なし
+- 最強のChurn予測因子: Contract（Month-to-month: 42.1% vs Two year: 1.0%）、PaymentMethod（Electronic check: 48.9%）
+- 数値特徴量の相関: tenure(r=-0.418) > MonthlyCharges(r=+0.273) > SeniorCitizen(r=+0.236) > TotalCharges(r=-0.218)
+- Charge_Difference: Churnとの相関は弱い(r=+0.037)が、合成アーティファクトとしてモデルが活用可能
+- train/test間の分布シフトなし → CVスコアを信頼できる
+- セキュリティ/サポート系サービス未加入者のChurn率が顕著に高い（40%超）
+**次のステップ**: ベースラインモデル構築（LightGBM）
