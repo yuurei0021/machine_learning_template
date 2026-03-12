@@ -196,3 +196,14 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - 全foldで2000ラウンド上限到達（early stopping未発動）
 - 合成データのfake signalはdepth>1で捉えられるため、depth=1では若干劣る結果
 **次のステップ**: LightGBMベースライン、アンサンブル
+
+---
+
+### 20260313_05_lightgbm_baseline
+**目的**: LightGBMによるベースライン構築（通常パラメータ）
+**アプローチ**: Label Encoding + Charge_Difference（20特徴量）、LightGBM (gbdt, num_leaves=31, lr=0.05)、categorical_feature指定、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9163**（XGBoost depth=6の0.9164とほぼ同等）
+- OOF LogLoss: 0.2978, Accuracy: 0.8615
+- Best iteration: 575〜724（XGBoostより少ないラウンドで収束）
+**次のステップ**: アンサンブル、CatBoost実験
