@@ -218,4 +218,5 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - OOF LogLoss: 0.3051, Accuracy: 0.8615
 - MCMC予測値が[0,1]範囲外になる問題をclipで対処
 - 実行時間: 約2時間（CPU）
+- LB AUC-ROC: **0.91405**（全モデル中最高）
 **次のステップ**: アンサンブル（LR + XGB + LGB + Bartz）、CatBoost実験
