@@ -207,3 +207,15 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - OOF LogLoss: 0.2978, Accuracy: 0.8615
 - Best iteration: 575〜724（XGBoostより少ないラウンドで収束）
 **次のステップ**: アンサンブル、CatBoost実験
+
+---
+
+### 20260313_06_bartz_baseline
+**目的**: Bartz（Bayesian Additive Regression Trees）によるベースライン構築。MCMCベースの手法でアンサンブル多様性を確保
+**アプローチ**: Target Encoding（CV-based） + Pairwise interaction features（120個） = 140特徴量、Bartz (maxdepth=6, ntree=400, k=5)、MCMC (NDPOST=1000, NSKIP=200, KEEPEVERY=2)、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9158**（各Fold: 0.9154, 0.9164, 0.9156, 0.9171, 0.9144）
+- OOF LogLoss: 0.3051, Accuracy: 0.8615
+- MCMC予測値が[0,1]範囲外になる問題をclipで対処
+- 実行時間: 約2時間（CPU）
+**次のステップ**: アンサンブル（LR + XGB + LGB + Bartz）、CatBoost実験
