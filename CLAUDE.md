@@ -220,3 +220,14 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - 実行時間: 約2時間（CPU）
 - LB AUC-ROC: **0.91405**（全モデル中最高）
 **次のステップ**: アンサンブル（LR + XGB + LGB + Bartz）、CatBoost実験
+
+---
+
+### 20260315_01_ydf_baseline
+**目的**: YDF Discussion知見のパラメータ（grow_policy='lossguide', max_depth=2）をXGBoostで再現
+**アプローチ**: Label Encoding + Charge_Difference（20特徴量）、XGBoost (hist, grow_policy=lossguide, max_depth=2, lr=0.05)、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9159**（各Fold: 0.9155, 0.9165, 0.9161, 0.9170, 0.9144）
+- OOF LogLoss: 0.2985, Accuracy: 0.8611
+- 全foldで2000ラウンド上限到達（early stopping未発動、ラウンド数増加で改善余地あり）
+**次のステップ**: ラウンド数増加実験、アンサンブル、ハイパーパラメータチューニング
