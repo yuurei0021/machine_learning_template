@@ -42,7 +42,7 @@ YDFはWindows非対応のため、対応するXGBoostパラメータで同等の
 | Logistic Regression | 0.9079 | 0.90504 |
 | XGBoost (depth=1) | 0.9135 | 0.91039 |
 | Bartz | 0.9158 | 0.91405 |
-| **XGB lossguide depth=2 (this)** | **0.9159** | TBD |
+| **XGB lossguide depth=2 (this)** | **0.9159** | **0.91311** |
 | LightGBM | 0.9163 | 0.91378 |
 | XGBoost (depth=6) | 0.9164 | 0.91391 |
 

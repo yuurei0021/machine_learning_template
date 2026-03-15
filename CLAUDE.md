@@ -230,4 +230,5 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - OOF AUC-ROC: **0.9159**（各Fold: 0.9155, 0.9165, 0.9161, 0.9170, 0.9144）
 - OOF LogLoss: 0.2985, Accuracy: 0.8611
 - 全foldで2000ラウンド上限到達（early stopping未発動、ラウンド数増加で改善余地あり）
+- LB AUC-ROC: **0.91311**
 **次のステップ**: ラウンド数増加実験、アンサンブル、ハイパーパラメータチューニング
