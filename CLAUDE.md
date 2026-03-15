@@ -84,12 +84,26 @@ id,Churn
 
 - **特徴量間の相互作用がほぼない**: 元データで `max_depth=1` が最適。ロジスティック回帰が強い。合成データでは `max_depth=2〜4` が有効（Chris Deotte, 1st place）
 - **合成データに2種類のシグナル**: (1) Real signal（元データ由来）と (2) Fake signal（合成アーティファクト）。両方を捉える必要がある
+- **Fake signalの本質**: 元データ7k行 → train 600k行（各行約85コピー+ノイズ）。類似コピーを探すアプローチが有効（Chris Deotte）
 - **TotalCharges のアーティファクト**: 元データでは `TotalCharges ≈ MonthlyCharges × tenure` が厳密に成立するが、合成データでは崩れている。`Charge_Difference = TotalCharges - MonthlyCharges * tenure` が有効な特徴量
 - **train vs test に分布シフトなし** (AV AUC=0.51): CVスコアを信頼できる
-- **train vs 元データにドリフトあり** (AV AUC=0.66): 元データを単純に結合するのは危険
+- **train vs 元データにドリフトあり** (AV AUC=0.66): 元データを単純に結合するのは危険（-0.00078 OOF）
+- **元データを参照分布として活用**: 結合ではなく、元データのChurn率を特徴量としてマッピング → 単一XGBで CV 0.919 / LB 0.917（008参照）
 - **有効なモデル**: XGBoost, LightGBM, CatBoost, YDF, Logistic Regression, MLP, GNN, Bartz。多様性のあるアンサンブルが鍵
-- **スタッキング**: OOF予測を別モデルの特徴量に追加するテクニックが有効
+- **Hill Climbing > Stacking**: 特徴量交互作用が少ないためHill Climbingが有効。Stackingは交互作用が多い場合に有効（Chris Deotte）
 - **スコア目安**: 合成データのみで CV 0.9148〜0.9150 が天井。元データ活用やアンサンブルで 0.916+ が可能
+
+### 特徴量エンジニアリング知見
+- **数学的FEは無効**: GP(遺伝的プログラミング)で10,000世代探索しても既存特徴量のコピーしか見つからない（007参照）
+- **カテゴリカル組み合わせが有効**: ペアワイズ組み合わせ + Target Encoding が推奨（007参照）
+- **元データ参照特徴量が強力**: ORIG_proba（元データのChurn率マッピング）、Contract×InternetService単一特徴量AUC 0.859（008参照）
+- **Digit/Modularアーティファクト**: tenure_mod12=1のChurn率41% vs 他9%。合成データ生成プロセスの痕跡（008参照）
+- **Service Counts**: 契約サービス数合計、has_internet、has_phoneフラグ（008参照）
+- **数値ビニング**: EDAベース（特徴量 vs ターゲット平均プロットで不連続点を発見）が推奨（011参照）
+- **決定木の限界**: Greedyアルゴリズムのため、A単独・B単独にパターンがない交互作用は発見不可 → 明示的FE（A*B等）が必要（011参照）
+
+### ツール
+- **動的Webページの取得**: `npx playwright` (v1.58.2) を使用。`node -e "const { chromium } = require('playwright'); ..."` で実行
 
 ## 実験管理ルール
 
