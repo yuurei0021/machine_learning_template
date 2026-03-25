@@ -13,4 +13,18 @@ dependencies = [
     "seaborn>=0.13.0",
     "kaggle>=2.0.0",
     "bartz==0.4.1",
+    "openpyxl>=3.1.5",
+    "optuna>=4.8.0",
+    "pyarrow>=23.0.1",
+    "catboost>=1.2.10",
+    "pytabkit>=1.7.3",
+    "torch>=2.0.0",
 ]
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu128"
+name = "pytorch-cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
