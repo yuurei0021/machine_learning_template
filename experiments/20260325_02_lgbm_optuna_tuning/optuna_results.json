@@ -1,0 +1,17 @@
+{
+  "best_value": 0.9187881290089309,
+  "best_params": {
+    "num_leaves": 57,
+    "max_depth": 4,
+    "min_child_samples": 18,
+    "subsample": 0.7135410552459618,
+    "colsample_bytree": 0.38375560400890063,
+    "reg_alpha": 3.9529230684922614,
+    "reg_lambda": 0.009361615704440437,
+    "min_split_gain": 0.5675967895488656
+  },
+  "best_trial_number": 18,
+  "n_trials": 50,
+  "search_n_splits": 5,
+  "search_time_min": 65.7
+}
