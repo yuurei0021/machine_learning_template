@@ -1,0 +1,12 @@
+{
+  "id": "nyhalcyon/tabm-orig-data-reference",
+  "title": "TabM Orig Data Reference",
+  "code_file": "tabm_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "competition_sources": ["playground-series-s6e3"],
+  "dataset_sources": ["blastchar/telco-customer-churn"]
+}
