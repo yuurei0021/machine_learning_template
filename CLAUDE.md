@@ -19,6 +19,42 @@
 - **実行**: `uv run python experiments/YYYYMMDD_NN_実験名/main.py`
 - **実験作成**: `uv run python scripts/create_experiment.py <実験名> [--template classification|regression]`
 
+## Kaggle GPU実行
+
+ローカルGPUのVRAMが不足するモデル（TabM等）はKaggle GPU (T4 x2, 30GB VRAM) で実行する。
+
+### ファイル構成
+
+```
+experiments/YYYYMMDD_NN_実験名/
+├── main.py                    # 正のコード（ローカル再現用、全ロジック含む）
+├── kaggle_kernel/             # Kaggle実行用
+│   ├── kernel-metadata.json   # Kaggle API設定（GPU、データソース等）
+│   └── tabm_kernel.py         # main.pyのKaggleパス調整版（薄いラッパー）
+├── predictions/               # Kaggle出力をダウンロードして配置
+└── README.md                  # Kaggle実行であること、カーネルID等を記録
+```
+
+### 実行手順
+
+```bash
+# 1. カーネルをpush（Kaggle GPU上で自動実行開始）
+uv run kaggle kernels push -p experiments/YYYYMMDD_NN_実験名/kaggle_kernel/
+
+# 2. 状態確認（complete になるまで待機）
+uv run kaggle kernels status ユーザー名/カーネル名
+
+# 3. 結果ダウンロード
+uv run kaggle kernels output ユーザー名/カーネル名 -p experiments/YYYYMMDD_NN_実験名/predictions/
+```
+
+### 原則
+
+- **main.py が正**: kaggle_kernel/ のスクリプトはパス調整のみの薄いコピー。ロジックはmain.pyと同一であること
+- **結果はリポジトリに格納**: ダウンロードしたOOF/テスト予測を `predictions/` に配置し、他の実験と同じ構造にする
+- **README.mdに実行条件を記録**: カーネルID、GPU種別、実行時間、pytabkitバージョン等
+- **元データDataset**: `sohailkhanlml/customer-churn-prediction-original-s6e3` を使用
+
 ## ファイル構成
 
 ```
@@ -89,8 +125,11 @@ id,Churn
 - **train vs test に分布シフトなし** (AV AUC=0.51): CVスコアを信頼できる
 - **train vs 元データにドリフトあり** (AV AUC=0.66): 元データを単純に結合するのは危険（-0.00078 OOF）
 - **元データを参照分布として活用**: 結合ではなく、元データのChurn率を特徴量としてマッピング → 単一XGBで CV 0.919 / LB 0.917（008参照）
-- **有効なモデル**: XGBoost, LightGBM, CatBoost, YDF, Logistic Regression, MLP, GNN, Bartz。多様性のあるアンサンブルが鍵
+- **有効なモデル**: XGBoost, LightGBM, CatBoost, YDF, Logistic Regression, RealMLP, GNN, Bartz。多様性のあるアンサンブルが鍵
+- **RealMLP (PyTabKit)**: 単体でCV 0.919+, LB 0.916+。n_ens=32が最も効果的。簡素なFE(42特徴量)でもツリーモデルと同等（012参照）
 - **Hill Climbing > Stacking**: 特徴量交互作用が少ないためHill Climbingが有効。Stackingは交互作用が多い場合に有効（Chris Deotte）
+- **Rank Averagingが安全なデフォルト**: 確率のキャリブレーション差に頑健。アンサンブル貢献度≠単体AUC、誤差が直交するモデルが重要（013参照）
+- **TE-Pair LogRegがアンサンブルで高貢献**: 単体AUCが低くてもツリーモデルと直交する誤差パターンで高い重みを得る（013参照）
 - **スコア目安**: 合成データのみで CV 0.9148〜0.9150 が天井。元データ活用やアンサンブルで 0.916+ が可能
 
 ### 特徴量エンジニアリング知見
@@ -103,7 +142,11 @@ id,Churn
 - **決定木の限界**: Greedyアルゴリズムのため、A単独・B単独にパターンがない交互作用は発見不可 → 明示的FE（A*B等）が必要（011参照）
 
 ### ツール
-- **動的Webページの取得**: `npx playwright` (v1.58.2) を使用。`node -e "const { chromium } = require('playwright'); ..."` で実行
+- **動的Webページの取得**: `playwright-cli` スキルを使用すること
+
+### ファイルアクセス制限
+- **リポジトリ外のファイル読み書き禁止**: プロジェクトディレクトリ外への Read/Write/Edit/Glob/Grep は PreToolUse hook でブロックされる
+- **許可パス**: プロジェクトディレクトリ、`~/.claude/`、`~/.kaggle/` のみ
 
 ## 実験管理ルール
 
@@ -246,3 +289,16 @@ uv run python scripts/create_experiment.py baseline_lgbm --template regression
 - 全foldで2000ラウンド上限到達（early stopping未発動、ラウンド数増加で改善余地あり）
 - LB AUC-ROC: **0.91311**
 **次のステップ**: ラウンド数増加実験、アンサンブル、ハイパーパラメータチューニング
+
+---
+
+### 20260323_01_orig_data_reference
+**目的**: 元データ（IBM Telco 7,043行）を参照分布として特徴量生成し、XGBoostのスコア向上を図る
+**アプローチ**: 実験03ベース + 9つの特徴量グループ（Freq Encoding, Arithmetic, Service Counts, ORIG_proba single/cross, Distribution, Quantile Distance, Digit/Modular, N-gram） + Nested Target Encoding（Inner 5-fold）。129基本特徴量 → 201モデル特徴量。XGBoost (hist, max_depth=6, lr=0.05)、5-Fold Stratified CV
+**結果**:
+- OOF AUC-ROC: **0.9185**（各Fold: 0.9184, 0.9191, 0.9185, 0.9198, 0.9169）
+- OOF LogLoss: 0.2943, Accuracy: 0.8635
+- ベースライン（実験03: 0.9164）から **+0.0021** の改善
+- 参考Notebook（10-fold, Optuna最適化）のCV 0.9190にほぼ匹敵
+- LB AUC-ROC: **0.91644**（全提出中最高、前最高Bartz 0.91405から+0.00239）
+**次のステップ**: Optunaチューニング、10-fold CV実験、アンサンブル
