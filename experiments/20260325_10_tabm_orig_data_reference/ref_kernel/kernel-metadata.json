@@ -1,0 +1,29 @@
+{
+  "id": "blamerx/s6e3-tabm-advanced-features-0-91898-cv",
+  "id_no": 112193477,
+  "title": "S6E3\u2b50|TabM + Advanced Features|0.91898 CV ",
+  "code_file": "s6e3-tabm-advanced-features-0-91898-cv.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": false,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "keywords": [
+    "feature engineering",
+    "gpu",
+    "tabular classification",
+    "neural networks",
+    "binary classification"
+  ],
+  "dataset_sources": [
+    "blastchar/telco-customer-churn"
+  ],
+  "kernel_sources": [],
+  "competition_sources": [
+    "playground-series-s6e3"
+  ],
+  "model_sources": [],
+  "docker_image": "gcr.io/kaggle-private-byod/python@sha256:9fa0da194fad2241d3f01a80581cbecbd3a258b4d1b695e2cbbbc62a0fd205ac",
+  "machine_shape": "NvidiaTeslaT4"
+}
