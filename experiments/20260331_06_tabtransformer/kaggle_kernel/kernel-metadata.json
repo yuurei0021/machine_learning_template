@@ -1,0 +1,13 @@
+{
+  "id": "nyhalcyon/tabtransformer-te-pair-logit3",
+  "title": "TabTransformer TE-Pair Logit3",
+  "code_file": "tabtransformer_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["blastchar/telco-customer-churn", "sohailkhanlml/customer-churn-prediction-original-s6e3"],
+  "competition_sources": ["playground-series-s6e3"]
+}
