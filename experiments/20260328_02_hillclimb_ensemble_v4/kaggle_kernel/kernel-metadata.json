@@ -1,0 +1,13 @@
+{
+  "id": "nyhalcyon/hill-climbing-ensemble-v4",
+  "title": "Hill Climbing Ensemble v4",
+  "code_file": "hc_v4_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["nyhalcyon/hc-v4-oof-predictions"],
+  "competition_sources": []
+}
