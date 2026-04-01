@@ -1,0 +1,13 @@
+{
+  "id": "nyhalcyon/gnn-starter",
+  "title": "GNN Starter",
+  "code_file": "gnn_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "competition_sources": ["playground-series-s6e3"],
+  "dataset_sources": []
+}
