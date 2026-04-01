@@ -1,0 +1,13 @@
+{
+  "id": "nyhalcyon/tabm-nb1feat-20fold",
+  "title": "TabM NB1feat 20fold",
+  "code_file": "tabm_nb1feat_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "competition_sources": ["playground-series-s6e3"],
+  "dataset_sources": ["blastchar/telco-customer-churn", "sohailkhanlml/customer-churn-prediction-original-s6e3"]
+}
