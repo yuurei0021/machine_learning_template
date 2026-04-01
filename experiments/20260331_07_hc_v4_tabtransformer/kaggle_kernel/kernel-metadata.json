@@ -1,0 +1,13 @@
+{
+  "id": "nyhalcyon/hc-v4-plus-tabtransformer",
+  "title": "HC v4+++ + TabTransformer",
+  "code_file": "hc_v4tt_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["nyhalcyon/hc-v4-oof-predictions", "nyhalcyon/tabtransformer-oof-predictions"],
+  "competition_sources": []
+}
