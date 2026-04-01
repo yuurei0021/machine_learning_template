@@ -1,0 +1,12 @@
+{
+  "id": "nyhalcyon/ridge-xgb-nb1feat",
+  "title": "Ridge XGB NB1feat",
+  "code_file": "ridge_xgb_nb1feat_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "competition_sources": ["playground-series-s6e3"],
+  "dataset_sources": ["blastchar/telco-customer-churn", "sohailkhanlml/customer-churn-prediction-original-s6e3", "nyhalcyon/ridge-nb1feat-oof"]
+}
